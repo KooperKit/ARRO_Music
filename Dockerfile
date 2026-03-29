@@ -1,27 +1,42 @@
-# 使用 Python 基礎環境
-FROM python:3.9-slim
+FROM python:3.10-slim
 
-# 安裝音樂處理必備套件：ffmpeg, MuseScore, 虛擬顯示器
+# 系統套件
 RUN apt-get update && apt-get install -y \
     ffmpeg \
     musescore3 \
     xvfb \
+    curl \
     && rm -rf /var/lib/apt/lists/*
+
+# MuseScore 無頭模式
+ENV QT_QPA_PLATFORM=offscreen
+ENV DISPLAY=:99
 
 WORKDIR /app
 
-# 安裝 Python 依賴庫（對應你上傳的 transcribe.py）
+# Python 套件 — 指定版本避免衝突
 RUN pip install --no-cache-dir \
-    yt-dlp basic-pitch music21 pretty-midi \
-    flask flask-cors requests
-# 複製所有檔案（包含你的 transcribe.py）
-COPY . .
+    flask==3.0.3 \
+    flask-cors==4.0.1 \
+    requests==2.31.0 \
+    yt-dlp==2024.8.6 \
+    basic-pitch==0.2.6 \
+    tensorflow==2.12.0 \
+    music21==9.3.0 \
+    pretty_midi==0.2.10 \
+    numpy==1.23.5 \
+    # ── LINE@ 預留套件（取消註解即可啟用）──
+    # line-bot-sdk==3.11.0 \
+    && true
 
-# 設定 MuseScore 可以在無螢幕環境執行
-ENV QT_QPA_PLATFORM=offscreen
+# 複製程式碼
+COPY app.py .
+COPY transcribe.py .
 
-# 宣告容器內部使用的埠位
+# 建立必要目錄
+RUN mkdir -p /app/scripts /app/output \
+    && cp /app/transcribe.py /app/scripts/transcribe.py
+
 EXPOSE 8080
 
-# 啟動命令
 CMD ["python", "app.py"]
