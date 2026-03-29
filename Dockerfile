@@ -11,8 +11,9 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # 安裝 Python 依賴庫（對應你上傳的 transcribe.py）
-RUN pip install --no-cache-dir yt-dlp basic-pitch music21 pretty-midi flask
-
+RUN pip install --no-cache-dir \
+    yt-dlp basic-pitch music21 pretty-midi \
+    flask flask-cors requests
 # 複製所有檔案（包含你的 transcribe.py）
 COPY . .
 
