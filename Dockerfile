@@ -19,8 +19,8 @@ COPY . .
 # 設定 MuseScore 可以在無螢幕環境執行
 ENV QT_QPA_PLATFORM=offscreen
 
-# 開放 API 埠位
-EXPOSE 5000
+# 宣告容器內部使用的埠位
+EXPOSE 8080
 
 # 啟動命令
 CMD ["python", "app.py"]
