@@ -1,7 +1,7 @@
-# 確保第一行是基礎鏡像，不讓 Zeabur 誤判
+# 使用 Python 基礎環境
 FROM python:3.9-slim
 
-# 更新套件並安裝實質運算工具
+# 安裝音樂處理必備套件：ffmpeg, MuseScore, 虛擬顯示器
 RUN apt-get update && apt-get install -y \
     ffmpeg \
     musescore3 \
@@ -10,15 +10,17 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-# 預先安裝依賴以利用快取
-RUN pip install --no-cache-dir flask music21 basicpitch yt-dlp
+# 安裝 Python 依賴庫（對應你上傳的 transcribe.py）
+RUN pip install --no-cache-dir yt-dlp basic-pitch music21 pretty-midi flask
 
+# 複製所有檔案（包含你的 transcribe.py）
 COPY . .
 
-# 這是關鍵：讓 MuseScore 能在無顯示器環境跑
+# 設定 MuseScore 可以在無螢幕環境執行
 ENV QT_QPA_PLATFORM=offscreen
 
+# 開放 API 埠位
 EXPOSE 5000
 
 # 啟動命令
-CMD ["python", "main.py"]
+CMD ["python", "transcribe.py"]
