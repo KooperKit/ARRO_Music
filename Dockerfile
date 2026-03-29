@@ -23,4 +23,4 @@ ENV QT_QPA_PLATFORM=offscreen
 EXPOSE 5000
 
 # 啟動命令
-CMD ["python", "transcribe.py"]
+CMD ["python", "app.py"]
