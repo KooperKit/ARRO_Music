@@ -40,4 +40,4 @@ def transcribe():
 
 if __name__ == '__main__':
     # 監聽 0.0.0.0 確保外部可以存取
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=8080)
